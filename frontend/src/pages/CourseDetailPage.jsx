@@ -126,8 +126,14 @@ export default function CourseDetailPage() {
           {/* Sidebar */}
           <aside className="sticky top-20 self-start mt-0 lg:mt-0 order-first lg:order-last mb-8 lg:mb-0">
             <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-              <div className="w-full h-44 bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
-                [Vista previa ▶]
+              <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/FkQ-4m6toDQ?rel=0&modestbranding=1"
+                  title="Vista previa del curso"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
               <div className="p-5">
                 <div className="mb-3">
