@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import ilustracion from '../assets/white77-boys-286245.jpg'
 
 const mockUsers = [
   { name: 'Carlos Rodríguez', email: 'carlos@edupath.com', password: 'estudiante123', role: 'Estudiante' },
@@ -46,9 +47,11 @@ export default function AuthPage() {
         <p className="text-xl text-center text-blue-200 mb-12 leading-relaxed">
           Aprende de los mejores.<br />Crece sin límites.
         </p>
-        <div className="w-72 h-48 bg-blue-800 bg-opacity-60 rounded-xl flex items-center justify-center text-blue-400">
-          [Ilustración]
-        </div>
+        <img
+          src={ilustracion}
+          alt="Estudiantes aprendiendo"
+          className="w-72 rounded-xl object-cover"
+        />
       </div>
 
       {/* Panel derecho */}
