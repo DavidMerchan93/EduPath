@@ -250,3 +250,101 @@ export const lessonResources = [
   { id: 'res1', name: 'factory-method.zip', type: 'zip' },
   { id: 'res2', name: 'slides-seccion-2.pdf', type: 'pdf' },
 ]
+
+// ── Catálogo completo (6 cursos para el grid de /cursos) ──────────────────────
+export const catalogCourses = [
+  {
+    id: '1',  title: 'JavaScript Avanzado: Patrones de Diseño',
+    instructor: 'Carlos Rodríguez', rating: 4.8, students: 2100,
+    price: 0, isFree: true, category: 'Desarrollo', level: 'Intermedio',
+  },
+  {
+    id: '2', title: 'Diseño UI/UX con Figma: Curso Completo',
+    instructor: 'Ana García', rating: 4.7, students: 2100,
+    price: 0, isFree: true, category: 'Diseño', level: 'Principiante',
+  },
+  {
+    id: '3', title: 'Python para Data Science',
+    instructor: 'Laura Jiménez', rating: 4.7, students: 2100,
+    price: 39, isFree: false, category: 'Desarrollo', level: 'Principiante',
+  },
+  {
+    id: '4', title: 'Marketing Digital Completo 2026',
+    instructor: 'Miguel Torres', rating: 4.7, students: 2100,
+    price: 44, isFree: false, category: 'Marketing', level: 'Todos los niveles',
+  },
+  {
+    id: '5', title: 'Fotografía Profesional desde Cero',
+    instructor: 'Roberto Vega', rating: 4.7, students: 2100,
+    price: 49, isFree: false, category: 'Fotografía', level: 'Principiante',
+  },
+  {
+    id: '1', title: 'React y TypeScript: Aplicaciones Modernas',
+    instructor: 'Sofía Ramírez', rating: 4.7, students: 2100,
+    price: 54, isFree: false, category: 'Desarrollo', level: 'Avanzado',
+  },
+]
+
+export const catalogFilters = {
+  categories: [
+    { label: 'Desarrollo', count: 420 },
+    { label: 'Diseño',     count: 210 },
+    { label: 'Negocios',   count: 180 },
+    { label: 'Marketing',  count: 95  },
+  ],
+  levels: [
+    { label: 'Principiante', count: 520 },
+    { label: 'Intermedio',   count: 380 },
+    { label: 'Avanzado',     count: 220 },
+  ],
+  prices: [
+    { label: 'Gratuito', count: 120 },
+    { label: 'De pago',  count: 1128 },
+  ],
+  ratings: [
+    { label: '4+ estrellas' },
+    { label: '3+ estrellas' },
+  ],
+}
+
+// ── Dashboard del estudiante ──────────────────────────────────────────────────
+export const dashboardUser = {
+  name: 'David Merchan',
+  email: 'davidm@email.com',
+  initials: 'DS',
+}
+
+export const dashboardStats = [
+  { id: 'ds1', value: '3',   label: 'Cursos en progreso', color: 'text-brand-blue'   },
+  { id: 'ds2', value: '2',   label: 'Completados',        color: 'text-brand-green'  },
+  { id: 'ds3', value: '48h', label: 'Horas aprendidas',   color: 'text-brand-orange' },
+  { id: 'ds4', value: '7 🔥', label: 'Días de racha',     color: 'text-brand-orange' },
+]
+
+export const enrolledCourses = [
+  {
+    id: 'e1', courseId: '1',
+    title: 'JavaScript Avanzado: Patrones de Diseño', instructor: 'Instructor 1',
+    progress: 65, lastLesson: 'Lección 3: Título de lección', completed: false,
+  },
+  {
+    id: 'e2', courseId: '2',
+    title: 'Diseño UI/UX con Figma', instructor: 'Instructor 2',
+    progress: 42, lastLesson: 'Lección 4: Título de lección', completed: false,
+  },
+  {
+    id: 'e3', courseId: '3',
+    title: 'Python para Data Science', instructor: 'Instructor 3',
+    progress: 100, lastLesson: 'Lección 5: Título de lección', completed: true,
+  },
+  {
+    id: 'e4', courseId: '4',
+    title: 'Marketing Digital Completo 2026', instructor: 'Instructor 4',
+    progress: 23, lastLesson: 'Lección 6: Título de lección', completed: false,
+  },
+  {
+    id: 'e5', courseId: '1',
+    title: 'React y TypeScript: Aplicaciones Modernas', instructor: 'Instructor 5',
+    progress: 88, lastLesson: 'Lección 7: Título de lección', completed: false,
+  },
+]

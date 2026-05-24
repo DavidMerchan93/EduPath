@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Cursos más populares</h2>
-            <Link to="/" className="text-brand-orange text-sm font-medium hover:underline">
+            <Link to="/cursos" className="text-brand-orange text-sm font-medium hover:underline">
               Ver todos →
             </Link>
           </div>
