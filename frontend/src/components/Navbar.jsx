@@ -1,6 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function Navbar() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/')
+  }
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
@@ -19,25 +28,50 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-6 text-sm text-gray-700 font-medium">
-          <Link to="/" className="hover:text-brand-orange transition-colors">Categorías</Link>
-          <Link to="/" className="hover:text-brand-orange transition-colors">Sé instructor</Link>
-        </div>
-
-        <div className="flex items-center gap-2 ml-auto">
-          <Link
-            to="/auth"
-            className="border border-brand-orange text-brand-orange px-4 py-1.5 rounded text-sm font-medium hover:bg-orange-50 transition-colors"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            to="/auth"
-            className="bg-brand-orange text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-orange-700 transition-colors"
-          >
-            Registrarse
-          </Link>
-        </div>
+        {user ? (
+          <>
+            <div className="hidden md:flex items-center gap-6 text-sm text-gray-700 font-medium">
+              <Link to="/dashboard" className="hover:text-brand-orange transition-colors">Mi aprendizaje</Link>
+              <Link to="/cursos"    className="hover:text-brand-orange transition-colors">Categorías</Link>
+            </div>
+            <div className="flex items-center gap-3 ml-auto">
+              <span className="hidden md:block text-sm text-gray-600">{user.name}</span>
+              <button
+                onClick={handleLogout}
+                className="border border-gray-300 text-gray-600 px-3 py-1.5 rounded text-sm hover:border-red-400 hover:text-red-500 transition-colors"
+              >
+                Salir
+              </button>
+              <Link
+                to="/dashboard"
+                className="w-9 h-9 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-sm flex-shrink-0 hover:bg-orange-700 transition-colors"
+              >
+                {user.initials}
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="hidden md:flex items-center gap-6 text-sm text-gray-700 font-medium">
+              <Link to="/cursos" className="hover:text-brand-orange transition-colors">Categorías</Link>
+              <Link to="/"       className="hover:text-brand-orange transition-colors">Sé instructor</Link>
+            </div>
+            <div className="flex items-center gap-2 ml-auto">
+              <Link
+                to="/auth"
+                className="border border-brand-orange text-brand-orange px-4 py-1.5 rounded text-sm font-medium hover:bg-orange-50 transition-colors"
+              >
+                Iniciar sesión
+              </Link>
+              <Link
+                to="/auth"
+                className="bg-brand-orange text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-orange-700 transition-colors"
+              >
+                Registrarse
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </nav>
   )

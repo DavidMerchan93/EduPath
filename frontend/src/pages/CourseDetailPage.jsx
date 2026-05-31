@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import AccordionSection from '../components/AccordionSection'
 import RatingBar from '../components/RatingBar'
 import { courses, courseSections, courseReviews, ratingDistribution } from '../data/mockData'
+import { isEnrolled, enroll } from '../utils/storage'
+import { useAuth } from '../context/AuthContext'
 
 function StarRating({ rating }) {
   return (
@@ -17,7 +20,18 @@ function StarRating({ rating }) {
 export default function CourseDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const course = courses.find((c) => c.id === id) || courses[0]
+  const [enrolled, setEnrolled] = useState(() => isEnrolled(course.id))
+
+  const firstLessonId = courseSections[0]?.lessons[0]?.id ?? 'l1'
+
+  function handleEnroll() {
+    if (!user) { navigate('/auth'); return }
+    enroll(course.id, course.title, course.instructor)
+    setEnrolled(true)
+    navigate(`/curso/${course.id}/leccion/${firstLessonId}`)
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -144,10 +158,10 @@ export default function CourseDetailPage() {
                   {course.discount}% dto. — Oferta termina pronto
                 </p>
                 <button
-                  onClick={() => navigate(`/curso/${course.id}/leccion/l5`)}
+                  onClick={handleEnroll}
                   className="w-full bg-brand-orange text-white py-3 rounded font-semibold text-sm hover:bg-orange-700 transition-colors mb-3"
                 >
-                  Comprar ahora — ${course.price} USD
+                  {enrolled ? 'Continuar curso →' : `Comprar ahora — $${course.price} USD`}
                 </button>
                 <button className="w-full border border-gray-300 text-gray-700 py-3 rounded font-medium text-sm hover:bg-gray-50 transition-colors mb-4">
                   ♡ Añadir a lista de deseos

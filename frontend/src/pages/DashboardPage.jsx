@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import NavbarUser from '../components/NavbarUser'
+import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { dashboardUser, dashboardStats, enrolledCourses } from '../data/mockData'
+import { dashboardStats, enrolledCourses, courseSections } from '../data/mockData'
+import { useAuth } from '../context/AuthContext'
+import { getProgress } from '../utils/storage'
 
 const navLinks = [
   { label: 'Dashboard',           icon: '📊', to: '/dashboard' },
@@ -31,15 +33,33 @@ function ProgressBar({ value, completed }) {
   )
 }
 
+const totalLessons = courseSections.flatMap((s) => s.lessons).length
+
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [activeNav, setActiveNav] = useState('Dashboard')
 
-  const inProgressCourses = enrolledCourses.filter((c) => !c.completed).slice(0, 3)
+  const coursesWithProgress = useMemo(() =>
+    enrolledCourses.map((c) => {
+      const p = getProgress(c.courseId)
+      const completed = p.completedLessonIds.length
+      const progress = totalLessons ? Math.round((completed / totalLessons) * 100) : c.progress
+      return {
+        ...c,
+        progress,
+        completed: progress === 100,
+        lastLesson: p.lastLessonTitle || c.lastLesson,
+      }
+    }),
+    []
+  )
+
+  const inProgressCourses = coursesWithProgress.filter((c) => !c.completed).slice(0, 3)
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <NavbarUser />
+      <Navbar />
 
       <div className="max-w-7xl mx-auto w-full px-4 py-6 flex gap-6 flex-1">
         {/* Sidebar izquierdo */}
@@ -47,11 +67,11 @@ export default function DashboardPage() {
           {/* Info del usuario */}
           <div className="flex items-center gap-3 mb-6 px-2">
             <div className="w-12 h-12 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-base flex-shrink-0">
-              {dashboardUser.initials}
+              {user?.initials}
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-gray-900 text-sm leading-tight truncate">{dashboardUser.name}</p>
-              <p className="text-gray-400 text-xs truncate">{dashboardUser.email}</p>
+              <p className="font-semibold text-gray-900 text-sm leading-tight truncate">{user?.name}</p>
+              <p className="text-gray-400 text-xs truncate">{user?.email}</p>
             </div>
           </div>
 
@@ -79,7 +99,7 @@ export default function DashboardPage() {
           {/* Saludo */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900">
-              👋 ¡Hola, {dashboardUser.name.split(' ')[0]}! Continúa aprendiendo.
+              👋 ¡Hola, {user?.name?.split(' ')[0]}! Continúa aprendiendo.
             </h1>
             <p className="text-gray-400 text-sm capitalize mt-1">{today}</p>
           </div>
@@ -132,11 +152,11 @@ export default function DashboardPage() {
                 <div className="col-span-2 text-right">Acción</div>
               </div>
 
-              {enrolledCourses.map((course, i) => (
+              {coursesWithProgress.map((course, i) => (
                 <div
                   key={course.id}
                   className={`flex flex-col md:grid md:grid-cols-12 md:gap-4 items-start md:items-center px-4 py-4 ${
-                    i < enrolledCourses.length - 1 ? 'border-b border-gray-100' : ''
+                    i < coursesWithProgress.length - 1 ? 'border-b border-gray-100' : ''
                   }`}
                 >
                   {/* Curso */}

@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ilustracion from '../assets/white77-boys-286245.jpg'
+import { useAuth } from '../context/AuthContext'
 
 const mockUsers = [
-  { name: 'Carlos Rodríguez', email: 'carlos@edupath.com', password: 'estudiante123', role: 'Estudiante' },
-  { name: 'Ana García',       email: 'ana@edupath.com',    password: 'instructor456', role: 'Instructora' },
+  { name: 'Carlos Rodríguez', initials: 'CR', email: 'carlos@edupath.com', password: 'estudiante123', role: 'Estudiante' },
+  { name: 'Ana García',       initials: 'AG', email: 'ana@edupath.com',    password: 'instructor456', role: 'Instructora' },
 ]
+
+function getInitials(name) {
+  return name.trim().split(' ').slice(0, 2).map((w) => w[0].toUpperCase()).join('')
+}
 
 export default function AuthPage() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [activeTab, setActiveTab] = useState('login')
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
@@ -30,12 +36,18 @@ export default function AuthPage() {
         (u) => u.email === form.email && u.password === form.password
       )
       if (match) {
-        navigate('/')
+        login({ name: match.name, email: match.email, role: match.role, initials: match.initials })
+        navigate('/dashboard')
       } else {
         setError('Correo o contraseña incorrectos. Usa uno de los usuarios de prueba.')
       }
     } else {
-      navigate('/')
+      if (!form.name || !form.email || !form.password) {
+        setError('Completa todos los campos.')
+        return
+      }
+      login({ name: form.name, email: form.email, role: 'Estudiante', initials: getInitials(form.name) })
+      navigate('/dashboard')
     }
   }
 

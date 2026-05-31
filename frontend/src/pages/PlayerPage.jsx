@@ -2,24 +2,41 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import VideoPlayer from '../components/VideoPlayer'
 import LessonSidebar from '../components/LessonSidebar'
-import { courses, courseSections, courseProgress, lessonResources } from '../data/mockData'
+import { courses, courseSections, lessonResources } from '../data/mockData'
+import { getProgress, completeLesson } from '../utils/storage'
 
 export default function PlayerPage() {
   const { id, lessonId } = useParams()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('descripcion')
+  const [progressData, setProgressData] = useState(() => getProgress(id))
 
   const course = courses.find((c) => c.id === id) || courses[0]
 
   const allLessons = courseSections.flatMap((s) => s.lessons)
-  const currentLesson = allLessons.find((l) => l.id === lessonId) || allLessons[3]
+  const currentLesson = allLessons.find((l) => l.id === lessonId) || allLessons[0]
   const currentSectionIndex = courseSections.findIndex((s) =>
-    s.lessons.some((l) => l.id === (lessonId || allLessons[3].id))
+    s.lessons.some((l) => l.id === currentLesson.id)
   )
-  const currentSection = courseSections[currentSectionIndex] || courseSections[1]
+  const currentSection = courseSections[currentSectionIndex] || courseSections[0]
 
-  const currentLessonIndex = allLessons.findIndex((l) => l.id === (lessonId || allLessons[3].id))
+  const currentLessonIndex = allLessons.findIndex((l) => l.id === currentLesson.id)
   const nextLesson = allLessons[currentLessonIndex + 1]
+
+  const completedPercentage = allLessons.length
+    ? Math.round((progressData.completedLessonIds.length / allLessons.length) * 100)
+    : 0
+
+  const progress = {
+    completedLessons: progressData.completedLessonIds,
+    percentage: completedPercentage,
+  }
+
+  function handleComplete() {
+    completeLesson(id, currentLesson.id, currentLesson.title)
+    setProgressData(getProgress(id))
+    if (nextLesson) navigate(`/curso/${id}/leccion/${nextLesson.id}`)
+  }
 
   const tabs = [
     { id: 'descripcion', label: 'Descripción' },
@@ -41,11 +58,13 @@ export default function PlayerPage() {
           {course.title} — {currentSection.title}: {currentLesson.title}
         </div>
         <button
-          onClick={() => nextLesson && navigate(`/curso/${id}/leccion/${nextLesson.id}`)}
-          disabled={!nextLesson}
+          onClick={handleComplete}
+          disabled={!nextLesson && progressData.completedLessonIds.includes(currentLesson.id)}
           className="bg-brand-orange text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
         >
-          Completar lección →
+          {progressData.completedLessonIds.includes(currentLesson.id) && !nextLesson
+            ? 'Curso completado ✓'
+            : 'Completar lección →'}
         </button>
       </header>
 
@@ -129,7 +148,7 @@ export default function PlayerPage() {
 
         {/* Sidebar de lecciones */}
         <div className="lg:w-80 flex-shrink-0 border-l border-blue-900 h-auto lg:h-full overflow-hidden">
-          <LessonSidebar sections={courseSections} progress={courseProgress} />
+          <LessonSidebar sections={courseSections} progress={progress} />
         </div>
       </div>
     </div>
