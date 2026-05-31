@@ -4,20 +4,17 @@ import ilustracion from '../assets/white77-boys-286245.jpg'
 import { useAuth } from '../context/AuthContext'
 
 const mockUsers = [
-  { name: 'Carlos Rodríguez', initials: 'CR', email: 'carlos@edupath.com', password: 'estudiante123', role: 'Estudiante' },
-  { name: 'Ana García',       initials: 'AG', email: 'ana@edupath.com',    password: 'instructor456', role: 'Instructora' },
+  { name: 'Carlos Rodríguez', email: 'carlos@edupath.com', password: 'estudiante123', role: 'Estudiante' },
+  { name: 'Ana García',       email: 'ana@edupath.com',    password: 'instructor456', role: 'Instructora' },
 ]
-
-function getInitials(name) {
-  return name.trim().split(' ').slice(0, 2).map((w) => w[0].toUpperCase()).join('')
-}
 
 export default function AuthPage() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, register } = useAuth()
   const [activeTab, setActiveTab] = useState('login')
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -29,25 +26,26 @@ export default function AuthPage() {
     setError('')
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (activeTab === 'login') {
-      const match = mockUsers.find(
-        (u) => u.email === form.email && u.password === form.password
-      )
-      if (match) {
-        login({ name: match.name, email: match.email, role: match.role, initials: match.initials })
+    setLoading(true)
+    setError('')
+    try {
+      if (activeTab === 'login') {
+        await login(form.email, form.password)
         navigate('/dashboard')
       } else {
-        setError('Correo o contraseña incorrectos. Usa uno de los usuarios de prueba.')
+        if (!form.name || !form.email || !form.password) {
+          setError('Completa todos los campos.')
+          return
+        }
+        await register(form.name, form.email, form.password)
+        navigate('/dashboard')
       }
-    } else {
-      if (!form.name || !form.email || !form.password) {
-        setError('Completa todos los campos.')
-        return
-      }
-      login({ name: form.name, email: form.email, role: 'Estudiante', initials: getInitials(form.name) })
-      navigate('/dashboard')
+    } catch (err) {
+      setError(err.message || 'Error al conectar con el servidor')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -183,9 +181,12 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full bg-brand-orange text-white py-3 rounded font-semibold text-sm hover:bg-orange-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-brand-orange text-white py-3 rounded font-semibold text-sm hover:bg-orange-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {activeTab === 'login' ? 'Iniciar sesión' : 'Crear cuenta gratis'}
+              {loading
+                ? 'Cargando...'
+                : activeTab === 'login' ? 'Iniciar sesión' : 'Crear cuenta gratis'}
             </button>
           </form>
 

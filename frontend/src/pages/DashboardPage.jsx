@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { dashboardStats, enrolledCourses, courseSections } from '../data/mockData'
 import { useAuth } from '../context/AuthContext'
-import { getProgress } from '../utils/storage'
+import { apiGetEnrollments, apiGetDashStats } from '../services/api'
 
 const navLinks = [
   { label: 'Dashboard',           icon: '📊', to: '/dashboard' },
@@ -33,29 +32,36 @@ function ProgressBar({ value, completed }) {
   )
 }
 
-const totalLessons = courseSections.flatMap((s) => s.lessons).length
-
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [activeNav, setActiveNav] = useState('Dashboard')
+  const [enrolledCourses, setEnrolledCourses] = useState([])
+  const [stats, setStats] = useState({ inProgress: 0, completed: 0, lessonsCompleted: 0 })
 
-  const coursesWithProgress = useMemo(() =>
-    enrolledCourses.map((c) => {
-      const p = getProgress(c.courseId)
-      const completed = p.completedLessonIds.length
-      const progress = totalLessons ? Math.round((completed / totalLessons) * 100) : c.progress
-      return {
-        ...c,
-        progress,
-        completed: progress === 100,
-        lastLesson: p.lastLessonTitle || c.lastLesson,
+  useEffect(() => {
+    async function load() {
+      try {
+        const [enrollments, dashStats] = await Promise.all([apiGetEnrollments(), apiGetDashStats()])
+        setEnrolledCourses(enrollments)
+        setStats(dashStats)
+      } catch {
+        // Si el backend no responde, quedamos con arrays vacíos
       }
-    }),
-    []
-  )
+    }
+    load()
+  }, [])
 
-  const inProgressCourses = coursesWithProgress.filter((c) => !c.completed).slice(0, 3)
+  const inProgressCourses = enrolledCourses.filter((c) => !c.completed).slice(0, 3)
+
+  const dashboardStats = [
+    { id: 'ds1', value: String(stats.inProgress),       label: 'Cursos en progreso', color: 'text-brand-blue'   },
+    { id: 'ds2', value: String(stats.completed),        label: 'Completados',         color: 'text-brand-green'  },
+    { id: 'ds3', value: `${stats.lessonsCompleted} 📖`, label: 'Lecciones vistas',   color: 'text-brand-orange' },
+    { id: 'ds4', value: String(enrolledCourses.length), label: 'Cursos inscritos',   color: 'text-brand-purple' },
+  ]
+
+  const coursesWithProgress = enrolledCourses
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

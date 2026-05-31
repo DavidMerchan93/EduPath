@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import AccordionSection from '../components/AccordionSection'
 import RatingBar from '../components/RatingBar'
-import { courses, courseSections, courseReviews, ratingDistribution } from '../data/mockData'
-import { isEnrolled, enroll } from '../utils/storage'
+import { ratingDistribution } from '../data/mockData'
+import { apiGetCourse, apiGetSections, apiGetReviews, apiEnroll, apiCheckEnrolled } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 
 function StarRating({ rating }) {
@@ -21,17 +21,72 @@ export default function CourseDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
-  const course = courses.find((c) => c.id === id) || courses[0]
-  const [enrolled, setEnrolled] = useState(() => isEnrolled(course.id))
 
-  const firstLessonId = courseSections[0]?.lessons[0]?.id ?? 'l1'
+  const [course,   setCourse]   = useState(null)
+  const [sections, setSections] = useState([])
+  const [reviews,  setReviews]  = useState([])
+  const [enrolled, setEnrolled] = useState(false)
+  const [loading,  setLoading]  = useState(true)
 
-  function handleEnroll() {
+  useEffect(() => {
+    async function load() {
+      setLoading(true)
+      try {
+        const [c, s, r] = await Promise.all([
+          apiGetCourse(id),
+          apiGetSections(id),
+          apiGetReviews(id),
+        ])
+        setCourse(c)
+        setSections(s)
+        setReviews(r)
+        if (user) {
+          const { enrolled: isEnrolled } = await apiCheckEnrolled(id)
+          setEnrolled(isEnrolled)
+        }
+      } catch {
+        // Si falla la API, no hay datos — la UI mostrará el estado vacío
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [id, user])
+
+  async function handleEnroll() {
     if (!user) { navigate('/auth'); return }
-    enroll(course.id, course.title, course.instructor)
-    setEnrolled(true)
-    navigate(`/curso/${course.id}/leccion/${firstLessonId}`)
+    if (enrolled) {
+      const firstLessonId = sections[0]?.lessons[0]?.id ?? 'l1'
+      navigate(`/curso/${id}/leccion/${firstLessonId}`)
+      return
+    }
+    try {
+      await apiEnroll(id)
+      setEnrolled(true)
+      const firstLessonId = sections[0]?.lessons[0]?.id ?? 'l1'
+      navigate(`/curso/${id}/leccion/${firstLessonId}`)
+    } catch (err) {
+      if (err.message.includes('inscrito')) {
+        setEnrolled(true)
+        const firstLessonId = sections[0]?.lessons[0]?.id ?? 'l1'
+        navigate(`/curso/${id}/leccion/${firstLessonId}`)
+      }
+    }
   }
+
+  if (loading) return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+      <div className="flex-1 flex items-center justify-center text-gray-400">Cargando...</div>
+    </div>
+  )
+
+  if (!course) return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+      <div className="flex-1 flex items-center justify-center text-gray-400">Curso no encontrado</div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -65,7 +120,7 @@ export default function CourseDetailPage() {
                 <span>Nivel: {course.level}</span>
               </div>
               <p className="text-blue-200 text-sm mb-1">
-                Por: <span className="text-white font-medium">{course.instructor}</span>{' '}
+                Por: <span className="text-white font-medium">{course.instructorName}</span>{' '}
                 — {course.instructorRole}
               </p>
               <p className="text-blue-300 text-xs">
@@ -90,10 +145,10 @@ export default function CourseDetailPage() {
             <div className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-1">Contenido del curso</h2>
               <p className="text-gray-500 text-sm mb-4">
-                {course.sections} secciones &bull; {course.lessons} clases &bull; {course.hours} horas
+                {course.sectionsCount} secciones &bull; {course.lessonsCount} clases &bull; {course.hours} horas
               </p>
               <div className="space-y-2">
-                {courseSections.map((section) => (
+                {sections.map((section) => (
                   <AccordionSection key={section.id} section={section} />
                 ))}
               </div>
@@ -116,7 +171,7 @@ export default function CourseDetailPage() {
               </div>
 
               <div className="space-y-4">
-                {courseReviews.map((review) => (
+                {reviews.map((review) => (
                   <div key={review.id} className="border border-gray-100 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold text-xs">

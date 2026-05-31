@@ -1,0 +1,416 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Carlos Rodríguez",
+      "initials": "CR",
+      "email": "carlos@edupath.com",
+      "passwordHash": "$2a$10$CuDJnyXLN0bnyn24GYplw.xaG8qKMpqy4P/HzsZgmBwj4Lo7bVbaO",
+      "role": "Estudiante"
+    },
+    {
+      "id": "u2",
+      "name": "Ana García",
+      "initials": "AG",
+      "email": "ana@edupath.com",
+      "passwordHash": "$2a$10$TAKBOY1r0FyiLtjCxxig1ebJvkRvu6LYV5B3l6SRQYqhVCkWmvUSa",
+      "role": "Instructora"
+    }
+  ],
+  "categories": [
+    {
+      "id": "c1",
+      "name": "Desarrollo",
+      "icon": "💻"
+    },
+    {
+      "id": "c2",
+      "name": "Diseño",
+      "icon": "🎨"
+    },
+    {
+      "id": "c3",
+      "name": "Negocios",
+      "icon": "💼"
+    },
+    {
+      "id": "c4",
+      "name": "Foto",
+      "icon": "📷"
+    },
+    {
+      "id": "c5",
+      "name": "Música",
+      "icon": "🎵"
+    },
+    {
+      "id": "c6",
+      "name": "Salud",
+      "icon": "🏃"
+    },
+    {
+      "id": "c7",
+      "name": "Marketing",
+      "icon": "📈"
+    },
+    {
+      "id": "c8",
+      "name": "Mobile",
+      "icon": "📱"
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "title": "JavaScript Avanzado: Patrones de Diseño y Arquitectura",
+      "shortDescription": "Domina los patrones de diseño más utilizados en proyectos JavaScript reales.",
+      "instructorName": "Carlos Rodríguez",
+      "instructorRole": "Desarrollador Senior",
+      "rating": 4.8,
+      "reviews": 3241,
+      "students": 12540,
+      "level": "Intermedio",
+      "price": 49,
+      "originalPrice": 89,
+      "discount": 45,
+      "isFree": false,
+      "category": "Desarrollo",
+      "language": "Español",
+      "lastUpdated": "Abril 2026",
+      "hours": 22,
+      "sectionsCount": 4,
+      "lessonsCount": 28,
+      "whatYouLearn": "[\"Patrones Creacionales (Factory, Builder, Singleton)\",\"Patrones Estructurales (Adapter, Decorator, Facade)\",\"Patrones de Comportamiento (Observer, Strategy, Command)\",\"Arquitectura limpia en proyectos JavaScript reales\"]"
+    },
+    {
+      "id": "2",
+      "title": "Diseño UI/UX con Figma: Curso Completo",
+      "shortDescription": "Aprende a diseñar interfaces modernas desde cero con Figma.",
+      "instructorName": "Ana García",
+      "instructorRole": "UX Designer Senior",
+      "rating": 4.8,
+      "reviews": 2308,
+      "students": 9800,
+      "level": "Principiante",
+      "price": 0,
+      "originalPrice": 79,
+      "discount": 100,
+      "isFree": true,
+      "category": "Diseño",
+      "language": "Español",
+      "lastUpdated": "Mayo 2026",
+      "hours": 18,
+      "sectionsCount": 6,
+      "lessonsCount": 48,
+      "whatYouLearn": "[\"Fundamentos de UI/UX Design\",\"Prototipado interactivo en Figma\",\"Design Systems y componentes\",\"Entrega de proyectos a desarrollo\"]"
+    },
+    {
+      "id": "3",
+      "title": "Python para Data Science y Machine Learning",
+      "shortDescription": "NumPy, Pandas, Matplotlib y Machine Learning básico con scikit-learn.",
+      "instructorName": "Laura Jiménez",
+      "instructorRole": "Data Scientist",
+      "rating": 4.8,
+      "reviews": 2300,
+      "students": 22100,
+      "level": "Principiante",
+      "price": 59,
+      "originalPrice": 99,
+      "discount": 40,
+      "isFree": false,
+      "category": "Desarrollo",
+      "language": "Español",
+      "lastUpdated": "Mayo 2026",
+      "hours": 30,
+      "sectionsCount": 10,
+      "lessonsCount": 88,
+      "whatYouLearn": "[\"Python desde cero hasta nivel avanzado\",\"Análisis de datos con Pandas y NumPy\",\"Visualización con Matplotlib y Seaborn\",\"Modelos de Machine Learning con scikit-learn\"]"
+    },
+    {
+      "id": "4",
+      "title": "Marketing Digital Completo 2026",
+      "shortDescription": "Estrategias de SEO, SEM, redes sociales y email marketing.",
+      "instructorName": "Miguel Torres",
+      "instructorRole": "Growth Hacker",
+      "rating": 4.8,
+      "reviews": 2300,
+      "students": 9800,
+      "level": "Todos los niveles",
+      "price": 39,
+      "originalPrice": 69,
+      "discount": 43,
+      "isFree": false,
+      "category": "Marketing",
+      "language": "Español",
+      "lastUpdated": "Marzo 2026",
+      "hours": 14,
+      "sectionsCount": 5,
+      "lessonsCount": 42,
+      "whatYouLearn": "[\"SEO y posicionamiento orgánico\",\"Google Ads y Facebook Ads\",\"Email marketing y automatización\",\"Analítica web con Google Analytics\"]"
+    }
+  ],
+  "sections": [
+    {
+      "id": "s1",
+      "courseId": "1",
+      "title": "Introducción y Setup",
+      "hours": 3,
+      "orderIndex": 1
+    },
+    {
+      "id": "s2",
+      "courseId": "1",
+      "title": "Patrones Creacionales",
+      "hours": 4,
+      "orderIndex": 2
+    },
+    {
+      "id": "s3",
+      "courseId": "1",
+      "title": "Patrones Estructurales",
+      "hours": 5,
+      "orderIndex": 3
+    },
+    {
+      "id": "s4",
+      "courseId": "1",
+      "title": "Patrones de Comportamiento",
+      "hours": 6,
+      "orderIndex": 4
+    }
+  ],
+  "lessons": [
+    {
+      "id": "l1",
+      "sectionId": "s1",
+      "title": "¿Qué son los patrones de diseño?",
+      "duration": "05:12",
+      "orderIndex": 1
+    },
+    {
+      "id": "l2",
+      "sectionId": "s1",
+      "title": "Historia y clasificación",
+      "duration": "08:45",
+      "orderIndex": 2
+    },
+    {
+      "id": "l3",
+      "sectionId": "s1",
+      "title": "Setup del entorno",
+      "duration": "07:30",
+      "orderIndex": 3
+    },
+    {
+      "id": "l4",
+      "sectionId": "s1",
+      "title": "Tu primer patrón",
+      "duration": "12:20",
+      "orderIndex": 4
+    },
+    {
+      "id": "l5",
+      "sectionId": "s2",
+      "title": "Factory Method",
+      "duration": "14:32",
+      "orderIndex": 1
+    },
+    {
+      "id": "l6",
+      "sectionId": "s2",
+      "title": "Abstract Factory",
+      "duration": "11:20",
+      "orderIndex": 2
+    },
+    {
+      "id": "l7",
+      "sectionId": "s2",
+      "title": "Builder Pattern",
+      "duration": "13:55",
+      "orderIndex": 3
+    },
+    {
+      "id": "l8",
+      "sectionId": "s2",
+      "title": "Singleton",
+      "duration": "09:10",
+      "orderIndex": 4
+    },
+    {
+      "id": "l9",
+      "sectionId": "s2",
+      "title": "Prototype Pattern",
+      "duration": "10:45",
+      "orderIndex": 5
+    },
+    {
+      "id": "l10",
+      "sectionId": "s2",
+      "title": "Ejercicio práctico creacionales",
+      "duration": "18:00",
+      "orderIndex": 6
+    },
+    {
+      "id": "l11",
+      "sectionId": "s3",
+      "title": "Adapter Pattern",
+      "duration": "12:05",
+      "orderIndex": 1
+    },
+    {
+      "id": "l12",
+      "sectionId": "s3",
+      "title": "Decorator Pattern",
+      "duration": "14:48",
+      "orderIndex": 2
+    },
+    {
+      "id": "l13",
+      "sectionId": "s3",
+      "title": "Facade Pattern",
+      "duration": "11:33",
+      "orderIndex": 3
+    },
+    {
+      "id": "l14",
+      "sectionId": "s3",
+      "title": "Bridge Pattern",
+      "duration": "13:22",
+      "orderIndex": 4
+    },
+    {
+      "id": "l15",
+      "sectionId": "s3",
+      "title": "Composite Pattern",
+      "duration": "10:15",
+      "orderIndex": 5
+    },
+    {
+      "id": "l16",
+      "sectionId": "s3",
+      "title": "Flyweight Pattern",
+      "duration": "09:40",
+      "orderIndex": 6
+    },
+    {
+      "id": "l17",
+      "sectionId": "s3",
+      "title": "Proxy Pattern",
+      "duration": "11:50",
+      "orderIndex": 7
+    },
+    {
+      "id": "l18",
+      "sectionId": "s3",
+      "title": "Ejercicio práctico estructurales",
+      "duration": "20:00",
+      "orderIndex": 8
+    },
+    {
+      "id": "l19",
+      "sectionId": "s4",
+      "title": "Observer Pattern",
+      "duration": "12:30",
+      "orderIndex": 1
+    },
+    {
+      "id": "l20",
+      "sectionId": "s4",
+      "title": "Strategy Pattern",
+      "duration": "11:15",
+      "orderIndex": 2
+    },
+    {
+      "id": "l21",
+      "sectionId": "s4",
+      "title": "Command Pattern",
+      "duration": "13:40",
+      "orderIndex": 3
+    },
+    {
+      "id": "l22",
+      "sectionId": "s4",
+      "title": "Iterator Pattern",
+      "duration": "09:55",
+      "orderIndex": 4
+    },
+    {
+      "id": "l23",
+      "sectionId": "s4",
+      "title": "Mediator Pattern",
+      "duration": "10:20",
+      "orderIndex": 5
+    },
+    {
+      "id": "l24",
+      "sectionId": "s4",
+      "title": "Memento Pattern",
+      "duration": "08:35",
+      "orderIndex": 6
+    },
+    {
+      "id": "l25",
+      "sectionId": "s4",
+      "title": "State Pattern",
+      "duration": "12:10",
+      "orderIndex": 7
+    },
+    {
+      "id": "l26",
+      "sectionId": "s4",
+      "title": "Template Method",
+      "duration": "11:45",
+      "orderIndex": 8
+    },
+    {
+      "id": "l27",
+      "sectionId": "s4",
+      "title": "Visitor Pattern",
+      "duration": "13:00",
+      "orderIndex": 9
+    },
+    {
+      "id": "l28",
+      "sectionId": "s4",
+      "title": "Proyecto final integrador",
+      "duration": "35:00",
+      "orderIndex": 10
+    }
+  ],
+  "enrollments": [],
+  "lessonProgress": [],
+  "reviews": [
+    {
+      "id": "r1",
+      "courseId": "1",
+      "author": "Estudiante 1",
+      "initials": "E1",
+      "date": "hace 2 semanas",
+      "rating": 5,
+      "text": "Excelente curso, muy bien explicado. Los ejercicios prácticos son muy útiles."
+    },
+    {
+      "id": "r2",
+      "courseId": "1",
+      "author": "Estudiante 2",
+      "initials": "E2",
+      "date": "hace 2 semanas",
+      "rating": 5,
+      "text": "Excelente curso, muy bien explicado. Los ejercicios prácticos son muy útiles."
+    }
+  ],
+  "lessonResources": [
+    {
+      "id": "res1",
+      "lessonId": "l5",
+      "name": "factory-method.zip",
+      "type": "zip"
+    },
+    {
+      "id": "res2",
+      "lessonId": "l5",
+      "name": "slides-seccion-2.pdf",
+      "type": "pdf"
+    }
+  ]
+}

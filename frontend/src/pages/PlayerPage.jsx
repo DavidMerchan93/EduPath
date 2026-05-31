@@ -1,40 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import VideoPlayer from '../components/VideoPlayer'
 import LessonSidebar from '../components/LessonSidebar'
-import { courses, courseSections, lessonResources } from '../data/mockData'
-import { getProgress, completeLesson } from '../utils/storage'
+import { courses, lessonResources } from '../data/mockData'
+import { apiGetSections, apiGetProgress, apiCompleteLesson } from '../services/api'
 
 export default function PlayerPage() {
   const { id, lessonId } = useParams()
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('descripcion')
-  const [progressData, setProgressData] = useState(() => getProgress(id))
+  const [activeTab, setActiveTab]   = useState('descripcion')
+  const [sections, setSections]     = useState([])
+  const [progressData, setProgressData] = useState({ completedLessonIds: [], percentage: 0 })
 
   const course = courses.find((c) => c.id === id) || courses[0]
 
-  const allLessons = courseSections.flatMap((s) => s.lessons)
+  useEffect(() => {
+    async function load() {
+      try {
+        const [s, p] = await Promise.all([apiGetSections(id), apiGetProgress(id)])
+        setSections(s)
+        setProgressData(p)
+      } catch {
+        // Si el backend no responde, sections queda vacío
+      }
+    }
+    load()
+  }, [id])
+
+  const allLessons = sections.flatMap((s) => s.lessons)
   const currentLesson = allLessons.find((l) => l.id === lessonId) || allLessons[0]
-  const currentSectionIndex = courseSections.findIndex((s) =>
-    s.lessons.some((l) => l.id === currentLesson.id)
+  const currentSectionIndex = sections.findIndex((s) =>
+    s.lessons?.some((l) => l.id === currentLesson?.id)
   )
-  const currentSection = courseSections[currentSectionIndex] || courseSections[0]
+  const currentSection = sections[currentSectionIndex] || sections[0]
 
-  const currentLessonIndex = allLessons.findIndex((l) => l.id === currentLesson.id)
+  const currentLessonIndex = allLessons.findIndex((l) => l.id === currentLesson?.id)
   const nextLesson = allLessons[currentLessonIndex + 1]
-
-  const completedPercentage = allLessons.length
-    ? Math.round((progressData.completedLessonIds.length / allLessons.length) * 100)
-    : 0
 
   const progress = {
     completedLessons: progressData.completedLessonIds,
-    percentage: completedPercentage,
+    percentage:       progressData.percentage,
   }
 
-  function handleComplete() {
-    completeLesson(id, currentLesson.id, currentLesson.title)
-    setProgressData(getProgress(id))
+  async function handleComplete() {
+    if (!currentLesson) return
+    try {
+      const updated = await apiCompleteLesson(id, currentLesson.id)
+      setProgressData(updated)
+    } catch {
+      // Si falla, seguimos navegando igual
+    }
     if (nextLesson) navigate(`/curso/${id}/leccion/${nextLesson.id}`)
   }
 
